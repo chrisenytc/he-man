@@ -1,4 +1,4 @@
-# ![He-Man](logo.png)
+# ![He-Man](https://raw.githubusercontent.com/chrisenytc/he-man/master/logo.png)
 
 > A superhero socket.io framework
 
