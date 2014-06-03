@@ -1,0 +1,47 @@
+{
+    "name": "he-man",
+    "description": "A superhero socket.io framework",
+    "version": "0.1.0",
+    "homepage": "https://github.com/chrisenytc/he-man",
+    "author": {
+        "name": "Christopher EnyTC",
+        "email": "chrisenytc@gmail.com"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/chrisenytc/he-man.git"
+    },
+    "bugs": {
+        "url": "https://github.com/chrisenytc/he-man/issues"
+    },
+    "licenses": [{
+        "type": "MIT",
+        "url": "https://github.com/chrisenytc/he-man/blob/master/LICENSE"
+    }],
+    "main": "app.js",
+    "engines": {
+        "node": ">= 0.10.26",
+        "npm": ">=1.4.3"
+    },
+    "scripts": {
+        "start": "./node_modules/pm2/bin/pm2 start app.js --name heMan",
+        "test": "make test"
+    },
+    "dependencies": {
+      "socket.io": "~1.0.3",
+      "underscore": "~1.6.0",
+      "colors": "~0.6.2",
+      "pm2": "~0.8.15"
+    },
+    "devDependencies": {
+        "mocha": "~1.10.0",
+        "chai": "~1.8.0"
+    },
+    "keywords": [
+        "websockets",
+        "framework",
+        "stack",
+        "modular",
+        "socket.io"
+    ]
+}

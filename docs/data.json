@@ -1,0 +1,118 @@
+{
+    "project": {
+        "name": "He-Man API",
+        "description": "He-Man API: A superhero socket.io framework",
+        "version": "0.1.0",
+        "url": "https://github.com/chrisenytc/he-man"
+    },
+    "files": {
+        "lib/heMan.js": {
+            "name": "lib/heMan.js",
+            "modules": {},
+            "classes": {
+                "HeMan": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        }
+    },
+    "modules": {},
+    "classes": {
+        "HeMan": {
+            "name": "HeMan",
+            "shortname": "HeMan",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "lib/heMan.js",
+            "line": 29,
+            "is_constructor": 1,
+            "example": [
+                "\n\n    var heMan = new HeMan();\n"
+            ]
+        }
+    },
+    "classitems": [
+        {
+            "file": "lib/heMan.js",
+            "line": 90,
+            "description": "Method responsible for get configs",
+            "example": [
+                "\n\n    heMan.getConfig('fileName');"
+            ],
+            "itemtype": "method",
+            "name": "getConfig",
+            "access": "public",
+            "tagname": "",
+            "params": [
+                {
+                    "name": "fileName",
+                    "description": "Name of config file",
+                    "type": "Object"
+                }
+            ],
+            "class": "HeMan"
+        },
+        {
+            "file": "lib/heMan.js",
+            "line": 119,
+            "description": "Method responsible for get services",
+            "example": [
+                "\n\n    heMan.getService('fileName');"
+            ],
+            "itemtype": "method",
+            "name": "getService",
+            "access": "public",
+            "tagname": "",
+            "params": [
+                {
+                    "name": "fileName",
+                    "description": "Name of service file",
+                    "type": "Object"
+                }
+            ],
+            "class": "HeMan"
+        },
+        {
+            "file": "lib/heMan.js",
+            "line": 146,
+            "description": "Method responsible for get base",
+            "example": [
+                "\n\n    heMan.getBase();"
+            ],
+            "itemtype": "method",
+            "name": "getBase",
+            "access": "public",
+            "tagname": "",
+            "class": "HeMan"
+        },
+        {
+            "file": "lib/heMan.js",
+            "line": 163,
+            "description": "Method responsible for loadding sockets",
+            "example": [
+                "\n\n    heMan.loadSockets(8081, function() {});"
+            ],
+            "itemtype": "method",
+            "name": "loadSockets",
+            "access": "public",
+            "tagname": "",
+            "params": [
+                {
+                    "name": "port",
+                    "description": "Port of socket",
+                    "type": "Object"
+                },
+                {
+                    "name": "cb",
+                    "description": "Callback",
+                    "type": "Function"
+                }
+            ],
+            "class": "HeMan"
+        }
+    ],
+    "warnings": []
+}

@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>lib/heMan.js - He-Man API</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+    <script src="http://yui.yahooapis.com/combo?3.9.1/build/yui/yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+            
+                <h1><img src="../assets/css/logo.png" title="He-Man API"></h1>
+            
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: 0.1.0</em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+    <h2 class="off-left">APIs</h2>
+    <div id="api-tabview" class="tabview">
+        <ul class="tabs">
+            <li><a href="#api-classes">Classes</a></li>
+            <li><a href="#api-modules">Modules</a></li>
+        </ul>
+
+        <div id="api-tabview-filter">
+            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+        </div>
+
+        <div id="api-tabview-panel">
+            <ul id="api-classes" class="apis classes">
+            
+                <li><a href="../classes/HeMan.html">HeMan</a></li>
+            
+            </ul>
+
+            <ul id="api-modules" class="apis modules">
+            
+            </ul>
+        </div>
+    </div>
+</div>
+
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+        Show:
+        <label for="api-show-inherited">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </div>
+
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+                        <h1 class="file-heading">File: lib/heMan.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
+/*
+ * he-man
+ * https://github.com/chrisenytc/he-man
+ *
+ * Copyright (c) 2014 Christopher EnyTC
+ * Licensed under the MIT license.
+ */
+
+&#x27;use strict&#x27;;
+
+/*
+ * Module Dependencies
+ */
+
+var fs = require(&#x27;fs&#x27;),
+    path = require(&#x27;path&#x27;),
+    _ = require(&#x27;underscore&#x27;),
+    debug = require(&#x27;./debugger.js&#x27;),
+    join = path.resolve,
+    readdir = fs.readdirSync,
+    exists = fs.existsSync,
+    configStorage = {},
+    serviceStorage = {};
+
+/*
+ * Public Methods
+ */
+
+/**
+ * @class HeMan
+ *
+ * @constructor
+ *
+ * Constructor responsible for provide a application server and helpers
+ *
+ * @example
+ *
+ *     var heMan = new HeMan();
+ *
+ */
+
+var HeMan = module.exports = function() {
+    //Get version
+    this.version = require(&#x27;../package.json&#x27;).version;
+    //Load files
+    this.load = function(root, cb) {
+        var fullPath = join(__dirname, &#x27;..&#x27;, &#x27;api&#x27;, root);
+        var ENV = process.env.NODE_ENV || &#x27;development&#x27;;
+        //
+        if (root === &#x27;config&#x27;) {
+            var configPath = join(fullPath, ENV);
+            //Read this directory
+            if (exists(configPath)) {
+                readdir(configPath).forEach(function(file) {
+                    if (fs.statSync(join(configPath, file)).isFile()) {
+                        //Resolve file path
+                        var filePath = join(configPath, file);
+                        //Check if this file exists
+                        if (exists(filePath)) {
+                            //Run callback
+                            var fileName = file.replace(/\.js$/, &#x27;&#x27;);
+                            fileName = fileName.replace(/\.json$/, &#x27;&#x27;);
+                            cb(filePath, fileName);
+                        }
+                    }
+                });
+            } else {
+                console.log(&#x27;ERROR: The &#x27;.red + ENV.white + &#x27; environment not exists in api/config&#x27;.red);
+                process.exit(0);
+            }
+        } else {
+            //Read this directory
+            readdir(fullPath).forEach(function(file) {
+                if (fs.statSync(join(fullPath, file)).isFile()) {
+                    //Resolve file path
+                    var filePath = join(fullPath, file);
+                    //Check if this file exists
+                    if (exists(filePath)) {
+                        //Run callback
+                        var fileName = file.replace(/\.js$/, &#x27;&#x27;);
+                        fileName = fileName.replace(/\.json$/, &#x27;&#x27;);
+                        cb(filePath, fileName);
+                    }
+                }
+            });
+        }
+    };
+};
+
+/**
+ * Method responsible for get configs
+ *
+ * @example
+ *
+ *     heMan.getConfig(&#x27;fileName&#x27;);
+ *
+ * @method getConfig
+ * @public
+ * @param {Object} fileName Name of config file
+ */
+
+HeMan.prototype.getConfig = function getConfig(fileName) {
+    //Load Settings
+
+    this.load(&#x27;config&#x27;, function(filePath, fileName) {
+        //Require configs
+        var config = require(filePath);
+        //Set Property
+        configStorage[fileName] = config;
+    });
+
+    if (fileName) {
+        return configStorage[fileName] || null;
+    } else {
+        return configStorage;
+    }
+};
+
+/**
+ * Method responsible for get services
+ *
+ * @example
+ *
+ *     heMan.getService(&#x27;fileName&#x27;);
+ *
+ * @method getService
+ * @public
+ * @param {Object} fileName Name of service file
+ */
+
+HeMan.prototype.getService = function getService(fileName) {
+    //Load Services
+
+    this.load(&#x27;services&#x27;, function(filePath, fileName) {
+        //Check if exists
+        if (exists(filePath)) {
+            //Require webservice
+            var service = require(filePath);
+            serviceStorage[fileName] = service;
+        }
+    });
+
+    return serviceStorage[fileName].call(this) || null;
+};
+
+/**
+ * Method responsible for get base
+ *
+ * @example
+ *
+ *     heMan.getBase();
+ *
+ * @method getBase
+ * @public
+ */
+
+HeMan.prototype.getBase = function getBase() {
+    //Load Base Application
+
+    return require(&#x27;./baseApplication.js&#x27;);
+};
+
+/**
+ * Method responsible for loadding sockets
+ *
+ * @example
+ *
+ *     heMan.loadSockets(8081, function() {});
+ *
+ * @method loadSockets
+ * @public
+ * @param {Object} port Port of socket
+ * @param {Function} cb Callback
+ */
+
+HeMan.prototype.loadSockets = function(port, cb) {
+    var Server = require(&#x27;http&#x27;).createServer();
+    var io = require(&#x27;socket.io&#x27;)(Server);
+
+    //Instance
+    var loader = this;
+
+    //Start server
+    io.serveClient(false);
+    Server.listen(port, function() {
+        debug(&#x27;Server listening at port &#x27; + port, &#x27;success&#x27;);
+    });
+
+    //Sockets
+    io.on(&#x27;connection&#x27;, function(socket) {
+
+        loader.load(&#x27;sockets&#x27;, function(filePath, fileName) {
+            //heMan instance
+            var heMan = new HeMan();
+            //Require configs
+            var sockets = require(filePath)(heMan, heMan.getConfig());
+            //Load All Sockets
+            _.each(sockets.prototype, function(s, key) {
+                //Handle requests
+                if (s.hasOwnProperty(&#x27;on&#x27;) &amp;&amp; _.isFunction(s.on)) {
+                    socket.on(path.join(fileName, key), s.on);
+                }
+                if (s.hasOwnProperty(&#x27;emit&#x27;)) {
+                    socket.emit(path.join(fileName, key), s.emit);
+                }
+            });
+        });
+
+        socket.on(&#x27;disconnect&#x27;, function() {
+            debug(&#x27;Connection closed!&#x27;, &#x27;error&#x27;);
+        });
+
+    });
+
+    //Run callback
+    cb();
+};
+    </pre>
+</div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>
