@@ -1,8 +1,8 @@
 # ![He-Man](logo.png)
 
-# He-Man [![Build Status](https://secure.travis-ci.org/chrisenytc/he-man.png?branch=master)](http://travis-ci.org/chrisenytc/he-man) [![GH version](https://badge-me.herokuapp.com/app/gh/chrisenytc/he-man.png)](http://badges.enytc.com/for/gh/chrisenytc/he-man)
-
 > A superhero socket.io framework
+
+[![Build Status](https://secure.travis-ci.org/chrisenytc/he-man.png?branch=master)](http://travis-ci.org/chrisenytc/he-man) [![GH version](https://badge-me.herokuapp.com/app/gh/chrisenytc/he-man.png)](http://badges.enytc.com/for/gh/chrisenytc/he-man)
 
 ## Getting Started
 
