@@ -1,7 +1,8 @@
 {
     "name": "he-man",
     "description": "A superhero socket.io framework",
-    "version": "0.1.1",
+    "version": "0.2.0",
+    "private": true,
     "homepage": "https://github.com/chrisenytc/he-man",
     "author": {
         "name": "Christopher EnyTC",
@@ -31,6 +32,7 @@
       "socket.io": "~1.0.3",
       "underscore": "~1.6.0",
       "colors": "~0.6.2",
+      "redis": "~0.10.3",
       "pm2": "~0.8.15"
     },
     "devDependencies": {

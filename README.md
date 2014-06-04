@@ -2,7 +2,7 @@
 
 > A superhero socket.io framework
 
-[![Build Status](https://secure.travis-ci.org/chrisenytc/he-man.png?branch=master)](http://travis-ci.org/chrisenytc/he-man) [![GH version](https://badge-me.herokuapp.com/app/gh/chrisenytc/he-man.png)](http://badges.enytc.com/for/gh/chrisenytc/he-man)
+[![Build Status](https://secure.travis-ci.org/chrisenytc/he-man.png?branch=master)](http://travis-ci.org/chrisenytc/he-man) [![GH version](https://badge-me.herokuapp.com/api/gh/chrisenytc/he-man.png)](http://badges.enytc.com/for/gh/chrisenytc/he-man)
 
 ## Getting Started
 
@@ -53,7 +53,7 @@ Example:
 
 ```javascript
 
-module.exports = function(app, config) {
+module.exports = function(app, db, config) {
 
     function IndexController() {
         //inherits
@@ -85,6 +85,12 @@ Example:
 
 ```javascript
 module.exports = function utilsService() {
+    return 'Hello World!';
+};
+```
+
+```javascript
+exports.utilsService = function utilsService() {
     return 'Hello World!';
 };
 ```

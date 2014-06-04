@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 0.1.1</em>
+            <em>API Docs for: 0.2.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -176,6 +176,40 @@ var HeMan = module.exports = function() {
 };
 
 /**
+ * Method responsible for load all dependencies
+ *
+ * @example
+ *
+ *     heMan.loader();
+ *
+ * @method loader
+ * @public
+ */
+
+HeMan.prototype.loader = function loader() {
+    //Load Settings
+    this.load(&#x27;config&#x27;, function(filePath, fileName) {
+        //Require configs
+        var config = require(filePath);
+        //Set Property
+        configStorage[fileName] = config;
+    });
+    //Debug
+    debug(&#x27;Custom settings loaded!&#x27;, &#x27;success&#x27;);
+    //Load Services
+    this.load(&#x27;services&#x27;, function(filePath, fileName) {
+        //Check if exists
+        if (exists(filePath)) {
+            //Require webservice
+            var service = require(filePath);
+            serviceStorage[fileName] = service;
+        }
+    });
+    //Debug
+    debug(&#x27;Services loaded!&#x27;, &#x27;success&#x27;);
+};
+
+/**
  * Method responsible for get configs
  *
  * @example
@@ -188,14 +222,6 @@ var HeMan = module.exports = function() {
  */
 
 HeMan.prototype.getConfig = function getConfig(fileName) {
-    //Load Settings
-
-    this.load(&#x27;config&#x27;, function(filePath, fileName) {
-        //Require configs
-        var config = require(filePath);
-        //Set Property
-        configStorage[fileName] = config;
-    });
 
     if (fileName) {
         return configStorage[fileName] || null;
@@ -217,18 +243,12 @@ HeMan.prototype.getConfig = function getConfig(fileName) {
  */
 
 HeMan.prototype.getService = function getService(fileName) {
-    //Load Services
 
-    this.load(&#x27;services&#x27;, function(filePath, fileName) {
-        //Check if exists
-        if (exists(filePath)) {
-            //Require webservice
-            var service = require(filePath);
-            serviceStorage[fileName] = service;
-        }
-    });
+    if (_.isFunction(serviceStorage[fileName])) {
+        return serviceStorage[fileName].call(this) || null;
+    }
 
-    return serviceStorage[fileName].call(this) || null;
+    return serviceStorage[fileName] || null;
 };
 
 /**
@@ -265,23 +285,38 @@ HeMan.prototype.loadSockets = function(port, cb) {
     var Server = require(&#x27;http&#x27;).createServer();
     var io = require(&#x27;socket.io&#x27;)(Server);
 
+    //heMan instance
+    var heMan = new HeMan(),
+        redis;
+
+    if (heMan.getConfig(&#x27;database&#x27;).enabled) {
+        //Start redis instance
+        redis = require(&#x27;redis&#x27;).createClient();
+        redis.on(&#x27;connect&#x27;, function() {
+            debug(&#x27;Redis =&gt; Connected successfully!&#x27;, &#x27;success&#x27;);
+        });
+        redis.on(&#x27;error&#x27;, function(err) {
+            debug(&#x27;Redis =&gt; Error &#x27; + err, &#x27;error&#x27;);
+        });
+    }
+
     //Instance
     var loader = this;
 
     //Start server
     io.serveClient(false);
     Server.listen(port, function() {
-        debug(&#x27;Server listening at port &#x27; + port, &#x27;success&#x27;);
+        debug(&#x27;Socket.io =&gt; Server listening at port &#x27; + port, &#x27;success&#x27;);
     });
 
     //Sockets
     io.on(&#x27;connection&#x27;, function(socket) {
 
+        debug(&#x27;Socket.io =&gt; Connected!&#x27;, &#x27;success&#x27;);
+
         loader.load(&#x27;sockets&#x27;, function(filePath, fileName) {
-            //heMan instance
-            var heMan = new HeMan();
             //Require configs
-            var sockets = require(filePath)(heMan, heMan.getConfig());
+            var sockets = require(filePath)(heMan, redis, heMan.getConfig());
             //Load All Sockets
             _.each(sockets.prototype, function(s, key) {
                 //Handle requests
@@ -295,7 +330,7 @@ HeMan.prototype.loadSockets = function(port, cb) {
         });
 
         socket.on(&#x27;disconnect&#x27;, function() {
-            debug(&#x27;Connection closed!&#x27;, &#x27;error&#x27;);
+            debug(&#x27;Socket.io =&gt; Connection closed!&#x27;, &#x27;error&#x27;);
         });
 
     });
@@ -303,6 +338,7 @@ HeMan.prototype.loadSockets = function(port, cb) {
     //Run callback
     cb();
 };
+
     </pre>
 </div>
 

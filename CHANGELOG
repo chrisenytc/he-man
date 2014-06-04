@@ -1,3 +1,8 @@
+v0.2.0:
+  date: 2014-5-4
+  changes:
+    - Optimize core
+    - Adding support for redis
 v0.1.1:
   date: 2014-5-3
   changes:

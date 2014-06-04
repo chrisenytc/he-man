@@ -14,7 +14,7 @@
 
 var util = require('util');
 
-module.exports = function(app, config) {
+module.exports = function(app, db, config) {
     //Root Application
     var ApplicationController = app.getBase();
 
@@ -25,10 +25,11 @@ module.exports = function(app, config) {
     util.inherits(IndexController, ApplicationController);
 
     IndexController.prototype.index = {
-        on: function() {
+        on: function(data) {
             //Create socket instance
             var socket = this;
             //Callback handler
+
             function callback(err, result, msg) {
                 if (err) {
                     return socket.emit('index/list', {
@@ -42,8 +43,20 @@ module.exports = function(app, config) {
                 }
                 return socket.emit('index/list', result);
             }
-            //invoke
-            return callback(null, {config: config, service: app.getService('utilsService')});
+            //Save
+            db.set('heman', data);
+            //Get
+            db.get('heman', function(err, reply) {
+                if(err) {
+                    return callback(err);
+                }
+                //invoke
+                return callback(null, {
+                    db: reply,
+                    config: config,
+                    service: app.getService('utilsService')
+                });
+            });
         }
     };
 

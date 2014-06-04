@@ -2,7 +2,7 @@
     "project": {
         "name": "He-Man API",
         "description": "He-Man API: A superhero socket.io framework",
-        "version": "0.1.1",
+        "version": "0.2.0",
         "url": "https://github.com/chrisenytc/he-man"
     },
     "files": {
@@ -38,6 +38,19 @@
         {
             "file": "lib/heMan.js",
             "line": 90,
+            "description": "Method responsible for load all dependencies",
+            "example": [
+                "\n\n    heMan.loader();"
+            ],
+            "itemtype": "method",
+            "name": "loader",
+            "access": "public",
+            "tagname": "",
+            "class": "HeMan"
+        },
+        {
+            "file": "lib/heMan.js",
+            "line": 124,
             "description": "Method responsible for get configs",
             "example": [
                 "\n\n    heMan.getConfig('fileName');"
@@ -57,7 +70,7 @@
         },
         {
             "file": "lib/heMan.js",
-            "line": 119,
+            "line": 145,
             "description": "Method responsible for get services",
             "example": [
                 "\n\n    heMan.getService('fileName');"
@@ -77,7 +90,7 @@
         },
         {
             "file": "lib/heMan.js",
-            "line": 146,
+            "line": 166,
             "description": "Method responsible for get base",
             "example": [
                 "\n\n    heMan.getBase();"
@@ -90,7 +103,7 @@
         },
         {
             "file": "lib/heMan.js",
-            "line": 163,
+            "line": 183,
             "description": "Method responsible for loadding sockets",
             "example": [
                 "\n\n    heMan.loadSockets(8081, function() {});"
