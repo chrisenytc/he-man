@@ -1,7 +1,7 @@
 {
     "name": "He-Man API",
     "description": "He-Man API: A superhero socket.io framework",
-    "version": "0.2.0",
+    "version": "0.3.0",
     "url": "https://github.com/chrisenytc/he-man",
     "options": {
         "outdir": "./docs",

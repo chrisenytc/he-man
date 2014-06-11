@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 0.2.0</em>
+            <em>API Docs for: 0.3.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -103,12 +103,15 @@
 var fs = require(&#x27;fs&#x27;),
     path = require(&#x27;path&#x27;),
     _ = require(&#x27;underscore&#x27;),
+    _s = require(&#x27;underscore.string&#x27;),
+    mongoose = require(&#x27;mongoose&#x27;),
     debug = require(&#x27;./debugger.js&#x27;),
     join = path.resolve,
     readdir = fs.readdirSync,
     exists = fs.existsSync,
     configStorage = {},
-    serviceStorage = {};
+    serviceStorage = {},
+    modelStorage = {};
 
 /*
  * Public Methods
@@ -195,8 +198,8 @@ HeMan.prototype.loader = function loader() {
         configStorage[fileName] = config;
     });
     //Debug
-    debug(&#x27;Custom settings loaded!&#x27;, &#x27;success&#x27;);
-    //Load Services
+    debug(&#x27;Custom settings loaded&#x27;, &#x27;success&#x27;);
+    //Load WebServices
     this.load(&#x27;services&#x27;, function(filePath, fileName) {
         //Check if exists
         if (exists(filePath)) {
@@ -206,7 +209,18 @@ HeMan.prototype.loader = function loader() {
         }
     });
     //Debug
-    debug(&#x27;Services loaded!&#x27;, &#x27;success&#x27;);
+    debug(&#x27;Services loaded&#x27;, &#x27;success&#x27;);
+    //Load Models
+    this.load(&#x27;models&#x27;, function(filePath, fileName) {
+        //Check if exists
+        if (exists(filePath)) {
+            //Require Models
+            var model = require(filePath);
+            modelStorage[_s.capitalize(fileName)] = model;
+        }
+    });
+    //Debug
+    debug(&#x27;Models loaded&#x27;, &#x27;success&#x27;);
 };
 
 /**
@@ -252,6 +266,27 @@ HeMan.prototype.getService = function getService(fileName) {
 };
 
 /**
+ * Method responsible for get models
+ *
+ * @example
+ *
+ *     heMan.getModel(&#x27;fileName&#x27;);
+ *
+ * @method getModel
+ * @public
+ * @param {String} fileName Name of model file
+ */
+
+HeMan.prototype.getModel = function getModel(fileName) {
+
+    if (fileName) {
+        return modelStorage[_s.capitalize(fileName)] || null;
+    } else {
+        return modelStorage;
+    }
+};
+
+/**
  * Method responsible for get base
  *
  * @example
@@ -265,7 +300,7 @@ HeMan.prototype.getService = function getService(fileName) {
 HeMan.prototype.getBase = function getBase() {
     //Load Base Application
 
-    return require(&#x27;./baseApplication.js&#x27;);
+    return require(__dirname + &#x27;/baseApplication.js&#x27;);
 };
 
 /**
@@ -286,17 +321,30 @@ HeMan.prototype.loadSockets = function(port, cb) {
     var io = require(&#x27;socket.io&#x27;)(Server);
 
     //heMan instance
-    var heMan = new HeMan(),
-        redis;
+    var heMan = new HeMan();
 
     if (heMan.getConfig(&#x27;database&#x27;).enabled) {
-        //Start redis instance
-        redis = require(&#x27;redis&#x27;).createClient();
-        redis.on(&#x27;connect&#x27;, function() {
-            debug(&#x27;Redis =&gt; Connected successfully!&#x27;, &#x27;success&#x27;);
+        //If not connected, connect and use this connection
+        mongoose.connect(configStorage.database.uri);
+        var Db = mongoose.connection;
+        //MongoDB ErrorHandler
+        if (process.env.NODE_ENV !== &#x27;test&#x27;) {
+            Db.on(&#x27;error&#x27;, console.error.bind(console, &#x27;Connection error:&#x27;.red));
+        }
+        //MongoDB ConnnectedEvent
+        Db.on(&#x27;connected&#x27;, function() {
+            debug(&#x27;MongoDB connected successfully&#x27;, &#x27;success&#x27;);
         });
-        redis.on(&#x27;error&#x27;, function(err) {
-            debug(&#x27;Redis =&gt; Error &#x27; + err, &#x27;error&#x27;);
+        //MongoDB DisconnnectedEvent
+        Db.on(&#x27;disconnected&#x27;, function() {
+            debug(&#x27;MongoDB disconnected&#x27;, &#x27;error&#x27;);
+        });
+        //MongoDB autoClose
+        process.on(&#x27;SIGINT&#x27;, function() {
+            mongoose.connection.close(function() {
+                debug(&#x27;Mongoose disconnected through app termination&#x27;, &#x27;error&#x27;);
+                process.exit(0);
+            });
         });
     }
 
@@ -306,17 +354,17 @@ HeMan.prototype.loadSockets = function(port, cb) {
     //Start server
     io.serveClient(false);
     Server.listen(port, function() {
-        debug(&#x27;Socket.io =&gt; Server listening at port &#x27; + port, &#x27;success&#x27;);
+        debug(&#x27;Server listening at port &#x27; + port, &#x27;success&#x27;);
     });
 
     //Sockets
     io.on(&#x27;connection&#x27;, function(socket) {
 
-        debug(&#x27;Socket.io =&gt; Connected!&#x27;, &#x27;success&#x27;);
+        debug(&#x27;Client Connected&#x27;, &#x27;success&#x27;);
 
         loader.load(&#x27;sockets&#x27;, function(filePath, fileName) {
             //Require configs
-            var sockets = require(filePath)(heMan, redis, heMan.getConfig());
+            var sockets = require(filePath)(heMan, heMan.getConfig());
             //Load All Sockets
             _.each(sockets.prototype, function(s, key) {
                 //Handle requests
@@ -330,7 +378,7 @@ HeMan.prototype.loadSockets = function(port, cb) {
         });
 
         socket.on(&#x27;disconnect&#x27;, function() {
-            debug(&#x27;Socket.io =&gt; Connection closed!&#x27;, &#x27;error&#x27;);
+            debug(&#x27;Connection closed&#x27;, &#x27;error&#x27;);
         });
 
     });

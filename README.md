@@ -53,7 +53,7 @@ Example:
 
 ```javascript
 
-module.exports = function(app, db, config) {
+module.exports = function(app, config) {
 
     function IndexController() {
         //inherits
@@ -70,6 +70,12 @@ module.exports = function(app, db, config) {
 };
 
 ```
+
+#### App Helpers
+
+- app.getConfig(fileName)
+- app.getService(fileName)
+- app.getModel(fileName)
 
 ## Services
 
@@ -93,6 +99,51 @@ module.exports = function utilsService() {
 exports.utilsService = function utilsService() {
     return 'Hello World!';
 };
+```
+
+## Models
+
+How to use Models
+
+The models in He-Man.js uses the mongoose and follows the implementation of the example below:
+
+```javascript
+var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
+
+/**
+ * Taks Schema
+ */
+var TaskSchema = new Schema({
+  created: {
+    type: Date,
+    default: Date.now
+  },
+  title: {
+    type: String,
+    default: '',
+    trim: true,
+    required: true
+  },
+  slug: {
+    type: String,
+    trim: true,
+    required: true,
+    unique: true
+  },
+  content: {
+    type: String,
+    default: '',
+    trim: true
+  },
+  closed: {
+    type: Boolean,
+    default: false
+  }
+});
+
+//Exports model
+module.exports = mongoose.model('Task', TaskSchema);
 ```
 
 ## Settings
@@ -129,6 +180,10 @@ Example:
 ```bash
 NODE_ENV=production node app
 ```
+
+## Screenshort
+
+# ![He-Man Screenshort](https://raw.githubusercontent.com/chrisenytc/he-man/master/screenshort.png)
 
 ## Contributing
 

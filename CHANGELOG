@@ -1,3 +1,9 @@
+v0.3.0:
+  date: 2014-6-11
+  changes:
+    - Adding new banner
+    - Adding new debugger
+    - Adding support for mongodb with mongoose
 v0.2.0:
   date: 2014-5-4
   changes:

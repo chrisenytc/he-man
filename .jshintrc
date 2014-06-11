@@ -17,5 +17,19 @@
     "strict": true,
     "trailing": true,
     "smarttabs": true,
-    "white": true
+    "white": true,
+    "globals"   : {
+      "require": true,
+      "exports": true,
+      "console": true,
+      "describe": true,
+      "it": true,
+      "define": true,
+      "window": true,
+      "document": true,
+      "angular": true,
+      "io": true,
+      "livi18n": true,
+      "App": true
+    }
 }
