@@ -181,9 +181,9 @@ Example:
 NODE_ENV=production node app
 ```
 
-## Screenshort
+## Screenshot
 
-# ![He-Man Screenshort](https://raw.githubusercontent.com/chrisenytc/he-man/master/screenshort.png)
+# ![He-Man Screenshot](https://raw.githubusercontent.com/chrisenytc/he-man/master/screenshot.png)
 
 ## Contributing
 
