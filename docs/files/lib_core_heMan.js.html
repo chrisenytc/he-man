@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>lib/heMan.js - He-Man API</title>
+    <title>lib/core/heMan.js - He-Man API</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 0.3.0</em>
+            <em>API Docs for: 0.4.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -82,7 +82,7 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: lib/heMan.js</h1>
+                        <h1 class="file-heading">File: lib/core/heMan.js</h1>
 
 <div class="file">
     <pre class="code prettyprint linenums">
@@ -132,10 +132,10 @@ var fs = require(&#x27;fs&#x27;),
 
 var HeMan = module.exports = function() {
     //Get version
-    this.version = require(&#x27;../package.json&#x27;).version;
+    this.version = require(&#x27;../../package.json&#x27;).version;
     //Load files
     this.load = function(root, cb) {
-        var fullPath = join(__dirname, &#x27;..&#x27;, &#x27;api&#x27;, root);
+        var fullPath = join(__dirname, &#x27;..&#x27;, &#x27;..&#x27;, &#x27;api&#x27;, root);
         var ENV = process.env.NODE_ENV || &#x27;development&#x27;;
         //
         if (root === &#x27;config&#x27;) {
@@ -287,20 +287,20 @@ HeMan.prototype.getModel = function getModel(fileName) {
 };
 
 /**
- * Method responsible for get base
+ * Method responsible for get libs
  *
  * @example
  *
- *     heMan.getBase();
+ *     heMan.getLib();
  *
- * @method getBase
+ * @method getLib
  * @public
+ * @param {String} fileName Name of lib file
  */
 
-HeMan.prototype.getBase = function getBase() {
-    //Load Base Application
-
-    return require(__dirname + &#x27;/baseApplication.js&#x27;);
+HeMan.prototype.getLib = function getLib(fileName) {
+    //Load Lib
+    return require(join(__dirname, &#x27;..&#x27;, fileName));
 };
 
 /**
@@ -348,6 +348,11 @@ HeMan.prototype.loadSockets = function(port, cb) {
         });
     }
 
+    //Loader extensions
+    this.loadSocketExtensions(io, function() {
+        debug(&#x27;Socket Extensions loaded&#x27;, &#x27;success&#x27;);
+    });
+
     //Instance
     var loader = this;
 
@@ -381,6 +386,37 @@ HeMan.prototype.loadSockets = function(port, cb) {
             debug(&#x27;Connection closed&#x27;, &#x27;error&#x27;);
         });
 
+    });
+
+    //Run callback
+    cb();
+};
+
+/**
+ * Method responsible for load socket extensions
+ *
+ * @example
+ *
+ *     heMan.loadSocketExtensions(io, function(){});
+ *
+ * @method loadSocketExtensions
+ * @public
+ * @param {Object} io Instance of socket.io;
+ * @param {Function} cb Callback
+ */
+
+HeMan.prototype.loadSocketExtensions = function loadSocketExtensions(io, cb) {
+    //Load Extensions
+    this.load(&#x27;../lib/extensions&#x27;, function(filePath) {
+        //Check if exists
+        if (exists(filePath)) {
+            //Require extension
+            var ext = require(filePath);
+            //Create extension
+            if(ext.hasOwnProperty(&#x27;core&#x27;) &amp;&amp; ext.core.hasOwnProperty(&#x27;extends&#x27;) &amp;&amp; typeof ext.core.extends === &#x27;function&#x27;) {
+                ext.core.extends(io);
+            }
+        }
     });
 
     //Run callback

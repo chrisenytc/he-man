@@ -76,6 +76,7 @@ module.exports = function(app, config) {
 - app.getConfig(fileName)
 - app.getService(fileName)
 - app.getModel(fileName)
+- app.getLib(fileName)
 
 ## Services
 
@@ -144,6 +145,32 @@ var TaskSchema = new Schema({
 
 //Exports model
 module.exports = mongoose.model('Task', TaskSchema);
+```
+
+### Extensions
+
+If you want, you cant to extends the He-Man Core without change any files in the core.
+
+You need to create extensions
+
+How to create socket extensions
+
+Example: 
+
+`lib/extensions/socket.js`
+
+```javascript
+
+module.exports = {
+    core: {
+        extends: function(io) {
+            //Socket Middleware
+            io.use(function(req, next) {
+                return next();
+            });
+        }
+    }
+};
 ```
 
 ## Settings

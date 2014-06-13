@@ -8,7 +8,7 @@ var util = require('util');
 
 module.exports = function(app, db, config) {
     //Root Application
-    var ApplicationController = app.getBase();
+    var ApplicationController = app.getLib('baseApplication');
 
     function IndexController() {
         ApplicationController.call(this);

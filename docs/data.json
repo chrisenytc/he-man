@@ -2,12 +2,12 @@
     "project": {
         "name": "He-Man API",
         "description": "He-Man API: A superhero socket.io framework",
-        "version": "0.3.0",
+        "version": "0.4.0",
         "url": "https://github.com/chrisenytc/he-man"
     },
     "files": {
-        "lib/heMan.js": {
-            "name": "lib/heMan.js",
+        "lib/core/heMan.js": {
+            "name": "lib/core/heMan.js",
             "modules": {},
             "classes": {
                 "HeMan": 1
@@ -26,7 +26,7 @@
             "extensions": [],
             "plugin_for": [],
             "extension_for": [],
-            "file": "lib/heMan.js",
+            "file": "lib/core/heMan.js",
             "line": 32,
             "is_constructor": 1,
             "example": [
@@ -36,7 +36,7 @@
     },
     "classitems": [
         {
-            "file": "lib/heMan.js",
+            "file": "lib/core/heMan.js",
             "line": 93,
             "description": "Method responsible for load all dependencies",
             "example": [
@@ -49,7 +49,7 @@
             "class": "HeMan"
         },
         {
-            "file": "lib/heMan.js",
+            "file": "lib/core/heMan.js",
             "line": 138,
             "description": "Method responsible for get configs",
             "example": [
@@ -69,7 +69,7 @@
             "class": "HeMan"
         },
         {
-            "file": "lib/heMan.js",
+            "file": "lib/core/heMan.js",
             "line": 159,
             "description": "Method responsible for get services",
             "example": [
@@ -89,7 +89,7 @@
             "class": "HeMan"
         },
         {
-            "file": "lib/heMan.js",
+            "file": "lib/core/heMan.js",
             "line": 180,
             "description": "Method responsible for get models",
             "example": [
@@ -109,20 +109,27 @@
             "class": "HeMan"
         },
         {
-            "file": "lib/heMan.js",
+            "file": "lib/core/heMan.js",
             "line": 201,
-            "description": "Method responsible for get base",
+            "description": "Method responsible for get libs",
             "example": [
-                "\n\n    heMan.getBase();"
+                "\n\n    heMan.getLib();"
             ],
             "itemtype": "method",
-            "name": "getBase",
+            "name": "getLib",
             "access": "public",
             "tagname": "",
+            "params": [
+                {
+                    "name": "fileName",
+                    "description": "Name of lib file",
+                    "type": "String"
+                }
+            ],
             "class": "HeMan"
         },
         {
-            "file": "lib/heMan.js",
+            "file": "lib/core/heMan.js",
             "line": 218,
             "description": "Method responsible for loadding sockets",
             "example": [
@@ -136,6 +143,31 @@
                 {
                     "name": "port",
                     "description": "Port of socket",
+                    "type": "Object"
+                },
+                {
+                    "name": "cb",
+                    "description": "Callback",
+                    "type": "Function"
+                }
+            ],
+            "class": "HeMan"
+        },
+        {
+            "file": "lib/core/heMan.js",
+            "line": 307,
+            "description": "Method responsible for load socket extensions",
+            "example": [
+                "\n\n    heMan.loadSocketExtensions(io, function(){});"
+            ],
+            "itemtype": "method",
+            "name": "loadSocketExtensions",
+            "access": "public",
+            "tagname": "",
+            "params": [
+                {
+                    "name": "io",
+                    "description": "Instance of socket.io;",
                     "type": "Object"
                 },
                 {
