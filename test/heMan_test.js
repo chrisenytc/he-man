@@ -4,7 +4,7 @@ var chai = require('chai');
 chai.expect();
 chai.should();
 
-var HeMan = require('../lib/heMan.js'),
+var HeMan = require('../lib/core/heMan.js'),
     heMan = new HeMan();
 
 describe('he-man module', function() {
