@@ -2,7 +2,7 @@
     "project": {
         "name": "He-Man API",
         "description": "He-Man API: A superhero socket.io framework",
-        "version": "0.4.0",
+        "version": "0.4.1",
         "url": "https://github.com/chrisenytc/he-man"
     },
     "files": {
@@ -155,7 +155,7 @@
         },
         {
             "file": "lib/core/heMan.js",
-            "line": 307,
+            "line": 328,
             "description": "Method responsible for load socket extensions",
             "example": [
                 "\n\n    heMan.loadSocketExtensions(io, function(){});"

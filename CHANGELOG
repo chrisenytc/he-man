@@ -1,3 +1,8 @@
+v0.4.1:
+  date: 2014-6-26
+  changes:
+    - Update socket loader
+    - Update compress
 v0.4.0:
   date: 2014-6-12
   changes:
