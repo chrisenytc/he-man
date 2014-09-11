@@ -208,10 +208,6 @@ Example:
 NODE_ENV=production node app
 ```
 
-## Screenshot
-
-# ![He-Man Screenshot](https://raw.githubusercontent.com/chrisenytc/he-man/master/screenshot.png)
-
 ## Contributing
 
 Please submit all issues and pull requests to the [chrisenytc/he-man](http://github.com/chrisenytc/he-man) repository!
